@@ -7,12 +7,13 @@
     $.fn.dynamiclist = function(options) {
 
         $(this).each(function() {
-            
+   
             // dynamic list
             var list = $(this);
 
             // setting plugin default settings and overriding options
             var settings = $.extend( {
+                templateClass: "list-template",
                 itemClass: "list-item",
                 addClass: "list-add",
                 removeClass: "list-remove",
@@ -24,8 +25,7 @@
             }, options);
 
             // initializes the list
-            if (settings.minSize == 0)
-                list.find("." + settings.itemClass + ":first").hide();
+            list.find("." + settings.templateClass).hide();
             var length = list.find("." + settings.itemClass).length;
             while (settings.minSize > length) {
                 handleAdd(list, null, settings);
@@ -41,6 +41,11 @@
             list.find("." + settings.removeClass).click(function(event) {
                 handleRemove(list, $(this), event, settings);
             });
+            
+            // when parent form is submitted
+            list.parents("form:first").submit(function(){
+                list.find("." + settings.templateClass).remove();
+            })
         });
 
         // Appends new item to the list by cloning the template item. The new
@@ -49,7 +54,7 @@
             var length = list.find("." + settings.itemClass).length;          
             if (length < settings.maxSize) {
                 // clone new item from first item
-                var item = list.find("." + settings.itemClass + ":first").clone(
+                var item = list.find("." + settings.templateClass).clone(
                     settings.withEvents);
                 item.show();
 
@@ -59,11 +64,14 @@
                 });
 
                 // clean up new item
-                normalizeItem(item, length);
+                normalizeItem(item, length, true);
                 clearItem(item);
 
                 // add new item
-                list.find("." + settings.itemClass + ":last").after(item);
+                var last = list.find("." + settings.itemClass + ":last");
+                if (last.length == 0)
+                    last = list.find("." + settings.templateClass);
+                last.after(item);
 				
                 // call back before adding
                 if (settings.addCallbackFn != null)
@@ -96,18 +104,27 @@
 
         // Normalizes the list but changing all id, name and for attribute
         // inside the item to the current item number.
-        function normalizeItem(item, itemNum) {
+        function normalizeItem(item, itemNum, isTemplate) {
             item.find("label, input, select, textarea").each(function() {
                 var attributes = ["class", "name", "id", "for"]
                 for (var i = 0; i < attributes.length; i++) {
                     var attr = $(this).attr(attributes[i]);
                     if (attr) {
-                        attr = attr.replace(/\d+\./, itemNum + ".");
-                        attr = attr.replace(/\[\d+\]\./, "[" + itemNum + "].");
+                        if (isTemplate) {
+                            attr = attr.replace(/\#\./, itemNum + ".");
+                            attr = attr.replace(/\[\#\]\./, "[" + itemNum + "].");
+                        }
+                        else {
+                            attr = attr.replace(/\d+\./, itemNum + ".");
+                            attr = attr.replace(/\[\d+\]\./, "[" + itemNum + "].");
+                        }
                         $(this).attr(attributes[i], attr);
                     }
                 }
             });
+            if (isTemplate) {
+                item.removeClass("list-template").addClass("list-item");
+            }
         }
 
         // Normalizes the entire list.
@@ -115,7 +132,7 @@
             list.find("." + settings.itemClass).each(function() {
                 var index = list.find("." + settings.itemClass).index(this);
                 var element = $(this);
-                normalizeItem(element, index);
+                normalizeItem(element, index, false);
             });
         }
 
