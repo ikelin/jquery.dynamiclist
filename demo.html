@@ -1,29 +1,49 @@
 <!doctype html>
 <html lang="en">
     <head>
-        <title>jQuery Dynamic List Demo</title>
+        <title>Dynamic List Demo</title>
         <meta charset="utf-8" />
         <style>
             body {
                 font-family: arial, sans-serif;
             }
-            form > label {
-                font-weight: bold;
-            }
+            
             .list-item {
                 padding-bottom: .25em;
             }
-            
-            #example {
+
+            form {
                 margin: 1em 2em;
+            }
+            
+            form > label {
+                font-weight: bold;
             }
         </style>
     </head>
     <body>
         <h1>jQuery Dynamic List Demo</h1>
-        <form id="form">
+        <h2>Basic List</h2>
+        <form>
             <label>Guest List</label>
             <div id="example">
+                <div class="list-item">
+                    <label>Name:
+                        <input type="text" name="guest[0].name" />
+                    </label>
+                    <a href="#" class="list-remove">- Remove</a>
+                </div>
+                <a href="#" class="list-add">+ Add</a>
+            </div>
+            <input type="submit" value="Submit" />
+        </form>
+
+        <h2>Allow Zero Item</h2>
+        <p>Remember that the first item is used as template and is hidden, make
+            sure the back end processing ignores the first time.</p>
+        <form>
+            <label>Guest List</label>
+            <div id="example2">
                 <div class="list-item">
                     <label>Name:
                         <input type="text" name="guest[0].name" />
@@ -39,10 +59,13 @@
         <script>
             $(document).ready(function() {
                 $("#example").dynamiclist();
+                $("#example2").dynamiclist({
+                    minSize: 0
+                });
                 
                 // show form submit data
-                $("#form").submit(function(event){
-                    alert("dynamic list size: " + $("#example").find(".list-item").length);
+                $("form").submit(function(event){
+                    alert("dynamic list size: " + $(this).find(".list-item").length);
                     event.preventDefault();
                 });
             });
