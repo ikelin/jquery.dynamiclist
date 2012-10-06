@@ -14,19 +14,19 @@ This plugin requires jQuery 1.4 or later.
 
 ## Usage ##
 
-	<div id="example">
-            <div class="list-item">
-	        <input type="text" name="guest[0].name" />
-        	<a href="#" class="list-remove">Remove</a>
-            </div>
-            <a href="#" class="list-add">Add</a>
-	</div>
+    <div id="example">
+        <div class="list-item">
+            <input type="text" name="guest[0].name" />
+            <a href="#" class="list-remove">Remove</a>
+        </div>
+        <a href="#" class="list-add">Add</a>
+    </div>
 
-	<script>
-    	$(document).ready(function() {
-	        $("#example").dynamiclist();
-	});
-	</script>
+    <script>
+        $(document).ready(function() {
+            $("#example").dynamiclist();
+        });
+    </script>
 
 ## Options ##
 
