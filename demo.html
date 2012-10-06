@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <title>jQuery Dynamic List Demo</title>
+        <meta charset="utf-8" />
+        <style>
+            body {
+                font-family: arial, sans-serif;
+            }
+            form > label {
+                font-weight: bold;
+            }
+            .list-item {
+                padding-bottom: .25em;
+            }
+            
+            #example {
+                margin: 1em 2em;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>jQuery Dynamic List Demo</h1>
+        <form id="form">
+            <label>Guest List</label>
+            <div id="example">
+                <div class="list-item">
+                    <label>Name:
+                        <input type="text" name="guest[0].name" />
+                    </label>
+                    <a href="#" class="list-remove">- Remove</a>
+                </div>
+                <a href="#" class="list-add">+ Add</a>
+            </div>
+            <input type="submit" value="Submit" />
+        </form>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+        <script src="jquery.dynamiclist.js"></script>
+        <script>
+            $(document).ready(function() {
+                $("#example").dynamiclist();
+                
+                // show form submit data
+                $("#form").submit(function(event){
+                    alert("dynamic list size: " + $("#example").find(".list-item").length);
+                    event.preventDefault();
+                });
+            });
+        </script>
+    </body>
+</html>
