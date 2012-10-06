@@ -41,7 +41,7 @@ See demo for more example.
 
 `withEvents` - When cloning a new item, copy the events/listeners as well?  Default is false.
 
-`minSize` - The minimum number of items in the dynamic list.  Default is 1.  If set to 0, the first item is hidden from the user (At least one item is needed to perform a cloning).  In this case, the back end processing will require extra handling since it'll have to ignore the first item in the binded list.
+`minSize` - The minimum number of items in the dynamic list.  Default is 1.
 
 `maxSize` - The maximum number of items in the dynamic list.  Default is 10.
 
