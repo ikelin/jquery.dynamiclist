@@ -6,14 +6,14 @@ This plugin is useful when data-binding one-to-many relationships.  Frameworks s
 
 The idea is a list and inside the list are items that can be dynamically added or removed.  So there is one `Add` button for the list and every item has a `Remove` button.  When the `Add` button is clicked, the plugin will clone the template item in the list and append the newly cloned item to the end of the list.
 
-The index for the template item has to be `#` so that the cloning process can replace the `#` with the appropriate index.  Before the form is submitted, the template item is removed.  If the business logic allows empty list, see the `minSize` option.
+The index for the template item has to be `#` so that the cloning process can replace the `#` with the appropriate index.  Before the form is submitted, the template item is removed so the data binding won't have a NumberFormatException.  If the form is submitted via AJAX, make sure to call the `removeListTemplate()` method before the remote form submit.
 
 See demo for more example.  
 
 ## Usage ##
 
     <form>
-		<div id="example">
+		<div id="list">
         	<div class="list-template">
         	    <input type="text" name="guest[#].name" />
         	    <a href="#" class="list-remove">Remove</a>
@@ -25,7 +25,26 @@ See demo for more example.
 
     <script>
         $(document).ready(function() {
-            $("#example").dynamiclist();
+            $("#list").dynamiclist();
+        });
+    </script>
+
+## Methods ##
+
+`removeListTemplate()` removes the list template so it will not be submitted and potentially causing NumberFormatException.  Example:
+
+	<script>
+        $(document).ready(function() {
+            var list = $("#list").dynamiclist();
+
+			// when doing AJAX form submit
+			$("#button").click(function(event) {
+				// remove list template
+				list.removeListTemplate();
+
+				// continue AJAX form submit
+				$.ajax(...)
+			});
         });
     </script>
 

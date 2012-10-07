@@ -2,55 +2,42 @@
  Dynamic List v 1.0.0
  Copyright (c) 2012 Ike Lin.  All rights reserved.  Licensed under the GPL v3.
  */
-(function($) {
+;(function($) {
 
     $.fn.dynamiclist = function(options) {
-
-        $(this).each(function() {
-   
-            // dynamic list
-            var list = $(this);
-
-            // setting plugin default settings and overriding options
-            var settings = $.extend( {
-                templateClass: "list-template",
-                itemClass: "list-item",
-                addClass: "list-add",
-                removeClass: "list-remove",
-                minSize: 1,
-                maxSize: 10,
-                withEvents: false,
-                addCallbackFn: null,
-                removeCallbackFn: null
-            }, options);
-
-            // initializes the list
-            list.find("." + settings.templateClass).hide();
-            var length = list.find("." + settings.itemClass).length;
-            while (settings.minSize > length) {
-                handleAdd(list, null, settings);
-                length++;
-            }
-
-            // when add link is clicked
-            list.find("." + settings.addClass).click(function(event) {
-                handleAdd(list, event, settings);
+        
+        // support multiple elements
+        if (this.length > 1) {
+            this.each(function() {
+                $(this).dynamiclist(options)
             });
-
-            // when remove link is clicked
-            list.find("." + settings.removeClass).click(function(event) {
-                handleRemove(list, $(this), event, settings);
-            });
-            
-            // when parent form is submitted
-            list.parents("form:first").submit(function(){
-                list.find("." + settings.templateClass).remove();
-            })
-        });
+            return this;
+        }
+        
+        // ------------------------------------------------
+        // private variables
+        // ------------------------------------------------
+        
+        // setting plugin default settings and overriding options
+        var settings = $.extend( {
+            templateClass: "list-template",
+            itemClass: "list-item",
+            addClass: "list-add",
+            removeClass: "list-remove",
+            minSize: 1,
+            maxSize: 10,
+            withEvents: false,
+            addCallbackFn: null,
+            removeCallbackFn: null
+        }, options);
+        
+        // ------------------------------------------------
+        // private methods
+        // ------------------------------------------------
 
         // Appends new item to the list by cloning the template item. The new
         // item is normalized and cleared of value before adding to the list.
-        function handleAdd(list, event, settings) {
+        var handleAdd = function(list, event, settings) {
             var length = list.find("." + settings.itemClass).length;          
             if (length < settings.maxSize) {
                 // clone new item from first item
@@ -85,7 +72,7 @@
         // Handles remove link action. Removes an item from the list. Normalizes
         // the list before returning. If there is only minimal item left, clear
         // the value but do not remove the item.
-        function handleRemove(list, alink, event, settings) {
+        var handleRemove = function(list, alink, event, settings) {
             var length = list.find("." + settings.itemClass).length;
             var item = alink.parents("." + settings.itemClass + ":first");
 
@@ -104,7 +91,7 @@
 
         // Normalizes the list but changing all id, name and for attribute
         // inside the item to the current item number.
-        function normalizeItem(item, itemNum, isTemplate) {
+        var normalizeItem = function(item, itemNum, isTemplate) {
             item.find("label, input, select, textarea").each(function() {
                 var attributes = ["class", "name", "id", "for"]
                 for (var i = 0; i < attributes.length; i++) {
@@ -128,25 +115,55 @@
         }
 
         // Normalizes the entire list.
-        function normalizeList(list, settings) {
+        var normalizeList = function(list, settings) {
             list.find("." + settings.itemClass).each(function() {
                 var index = list.find("." + settings.itemClass).index(this);
-                var element = $(this);
-                normalizeItem(element, index, false);
+                normalizeItem($(this), index, false);
             });
         }
 
         // Clears value from all input text items.
-        function clearItem(item) {
+        var clearItem = function(item) {
             item.find("input[type=text], textarea").val("");
-            item.find("input[type=radio]").attr({
-                checked: false
-            });
-            item.find("input[type=checkbox]").attr({
-                checked: false
-            });
+            item.find("input[type=radio]").attr({checked: false});
+            item.find("input[type=checkbox]").attr({checked: false});
         }
+        
+        var init = function(list) {
+           
+            // initializes the list
+            list.find("." + settings.templateClass).hide();
+            var length = list.find("." + settings.itemClass).length;
+            while (settings.minSize > length) {
+                handleAdd(list, null, settings);
+                length++;
+            }
 
+            // when add link is clicked
+            list.find("." + settings.addClass).click(function(event) {
+                handleAdd(list, event, settings);
+            });
+
+            // when remove link is clicked
+            list.find("." + settings.removeClass).click(function(event) {
+                handleRemove(list, $(this), event, settings);
+            });
+            
+            // when parent form is submitted
+            list.parents("form:first").submit(function(){
+                list.find("." + settings.templateClass).remove();
+            })
+            
+            return list;
+        }
+        
+        // ------------------------------------------------
+        // public methods
+        // ------------------------------------------------
+        this.removeListTemplate = function() {
+            $(this).find("." + settings.templateClass).remove();
+        }
+        
+        return init(this);  
     }
-
 })(jQuery);

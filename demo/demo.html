@@ -59,7 +59,7 @@
                 </div>
             </div>
         </form>
-
+        <hr />
         <form class="form-horizontal">
             <h2>Example 3: With Events</h2>
             <p>This form contains select that has an onChange event listener.</p>
@@ -92,35 +92,36 @@
                 </div>
             </div>
         </form>
-
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
         <script src="../jquery.dynamiclist.min.js" type="text/javascript"></script>
         <script>
-            $(document).ready(function() {
-                $("#example1").dynamiclist();
-                $("#example2").dynamiclist({minSize:0});
-                $("#example3").dynamiclist({withEvents:true});
-                
-                // example 3 on change event         
-                $("#example3 .color").change(function() {
-                    $(this).prev().css("color", $(this).val())
-                });
-                
-                // display form submit data
-                $("form").submit(function(event) {
-                    var data = "";
-                    $(this).find("input, select").each(function() {
-                        var element = $(this);
-                        if (element.attr("type") != "submit") {
-                            data += element.attr("name");
-                            data += "="
-                            data += element.attr("value");
-                            data += "; "
-                        }
+            (function($) {
+                $(document).ready(function() {
+                    $("#example1").dynamiclist();
+                    $("#example2").dynamiclist({minSize:0});
+                    $("#example3").dynamiclist({withEvents:true});   
+                    $("#example3 .color").change(function() {
+                        $(this).prev().css("color", $(this).val())
                     });
-                    alert(data);
+
+                    // display form submit data
+                    $("form").submit(function(event) {
+                        event.preventDefault();
+                        var data = "";
+                        $(this).find("input, select").each(function() {
+                            var element = $(this);
+                            if (element.attr("type") != "submit") {
+                                data += element.attr("name");
+                                data += "="
+                                data += element.attr("value");
+                                data += "; "
+                            }
+                        });
+                        alert(data);
+                        location.reload(true);
+                    });
                 });
-            });
+            })(jQuery);
         </script>
     </body>
 </html>
