@@ -1,10 +1,10 @@
-# jquery.dynamiclist #
+# jQuery Dynamic List #
 
 A jQuery plugin that dynamically adds or removes items from a list on the client side and normalizes the list index.
 
 This plugin is useful when data-binding one-to-many relationships.  Frameworks such as Spring MVC (using AutoPopulatingList) can bind the list automatically to the form backing object as long as the items are normalized.
 
-The idea is a list and inside the list are items that can be dynamically added or removed.  So there is one `Add` button for the list and every item has a `Remove` button.  When the `Add` button is clicked, the plugin will clone the template item in the list and append the newly cloned item to the end of the list.
+The idea is a list and inside the list are items that can be dynamically added or removed.  So there is one `Add` button for the list and every item has a `Remove` button.  When the `Add` button is clicked, the plugin will clone the template item in the list and append the newly cloned item to the end of the list.  While adding and removing, the plugin is also normalizing the index for each item.
 
 The index for the template item has to be `#` so that the cloning process can replace the `#` with the appropriate index.  Before the form is submitted, the template item is removed so the data binding won't have a NumberFormatException.  If the form is submitted via AJAX, make sure to call the `removeListTemplate()` method before the remote form submit.
 
@@ -58,7 +58,7 @@ See demo for more example.
 
 `removeClass` - The class name of the `Remove` button.  Defaults to `list-remove`
 
-`withEvents` - When cloning a new item, copy the events/listeners as well?  Default is false.
+`withEvents` - When cloning a new item, copy the events/listeners as well.  Default is false.
 
 `minSize` - The minimum number of items in the dynamic list.  Default is 1.
 
