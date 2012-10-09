@@ -1,6 +1,7 @@
-/*
- Dynamic List v 1.0.0
- Copyright (c) 2012 Ike Lin.  All rights reserved.  Licensed under the GPL v3.
+/**
+ * jQuery Dynamic List v 1.0.0
+ * Copyright 2012 Ike Lin
+ * http://www.apache.org/licenses/LICENSE-2.0.txt
  */
 ;(function($) {
 
