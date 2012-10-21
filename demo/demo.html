@@ -1,13 +1,13 @@
 <!doctype html>
 <html lang="en">
     <head>
-        <title>jQuery Dynamic List Demo</title>
+        <title>jQuery Dynamic List v2.0 Demo</title>
         <meta charset="utf-8" />
         <link rel="stylesheet" href="css/bootstrap.min.css" />
-        <style>body{margin:1em}.list-item{padding-bottom:.25em}</style>
+        <style>body{margin:2em}.list-item{padding-bottom:.25em}.list-remove{display:none}</style>
     </head>
     <body>
-        <h1>jQuery Dynamic List Demo</h1>
+        <h1>jQuery Dynamic List v2.0 Demo</h1>
         <hr />
         <form class="form-horizontal">
             <h2>Example 1: Basic List</h2>
@@ -20,8 +20,8 @@
             <div class="control-group">
                 <label class="control-label">Guest List</label>
                 <div id="example1" class="controls">
-                    <div class="list-template">
-                        <input name="guestList[#].name" type="text" placeholder="Guest Name">
+                    <div class="list-item">
+                        <input name="guestList[0].name" type="text" placeholder="Guest Name">
                         <a href="#" class="list-remove btn btn-small"><i class="icon-minus"></i> Remove Guest</a>
                     </div>
                     <a href="#" class="list-add btn btn-small"><i class="icon-plus"></i> Add Guest</a>
@@ -35,8 +35,8 @@
         </form>
         <hr />
         <form class="form-horizontal">
-            <h2>Example 2: Allow Empty List</h2>
-            <p>This form allows an empty guest list to be submitted.</p>
+            <h2>Example 2: With Events</h2>
+            <p>This form contains select that has an onChange event listener that changes the color of the input text.</p>
             <div class="control-group">
                 <label class="control-label">Party</label>
                 <div class="controls">
@@ -46,35 +46,9 @@
             <div class="control-group">
                 <label class="control-label">Guest List</label>
                 <div id="example2" class="controls">
-                    <div class="list-template">
-                        <input name="guestList[#].name" type="text" placeholder="Guest Name">
-                        <a href="#" class="list-remove btn btn-small"><i class="icon-minus"></i> Remove Guest</a>
-                    </div>
-                    <a href="#" class="list-add btn btn-small"><i class="icon-plus"></i> Add Guest</a>
-                </div>
-            </div>
-            <div class="control-group">
-                <div class="controls">
-                    <input type="submit" class="btn btn-primary btn-large" value="Process Example 2"/>
-                </div>
-            </div>
-        </form>
-        <hr />
-        <form class="form-horizontal">
-            <h2>Example 3: With Events</h2>
-            <p>This form contains select that has an onChange event listener.</p>
-            <div class="control-group">
-                <label class="control-label">Party</label>
-                <div class="controls">
-                    <input name="partyName" type="text" placeholder="Party Name">
-                </div>
-            </div>
-            <div class="control-group">
-                <label class="control-label">Guest List</label>
-                <div id="example3" class="controls">
-                    <div class="list-template">
-                        <input name="guestList[#].name" type="text" placeholder="Guest Name">
-                        <select name="guestList[#].color" class="color">
+                    <div class="list-item">
+                        <input name="guestList[0].name" type="text" placeholder="Guest Name">
+                        <select name="guestList[0].color" class="color">
                             <option value="black">- select color -</option>
                             <option value="blue">Blue</option>
                             <option value="orange">Orange</option>
@@ -88,21 +62,30 @@
             </div>
             <div class="control-group">
                 <div class="controls">
-                    <input type="submit" class="btn btn-primary btn-large" value="Process Example 3"/>
+                    <input type="submit" class="btn btn-primary btn-large" value="Process Example 2"/>
                 </div>
             </div>
         </form>
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
-        <script src="../jquery.dynamiclist.min.js" type="text/javascript"></script>
+        <script src="../jquery.dynamiclist.js" type="text/javascript"></script>
         <script>
             (function($) {
                 $(document).ready(function() {
                     $("#example1").dynamiclist();
-                    $("#example2").dynamiclist({minSize:0});
-                    $("#example3").dynamiclist({withEvents:true});   
-                    $("#example3 .color").change(function() {
+                    $("#example2").dynamiclist({
+                        withEvents:true,
+                        addCallbackFn:resetColor
+                    });
+
+                    // example 2's change event
+                    $("#example2 .color").change(function() {
                         $(this).prev().css("color", $(this).val())
                     });
+                    
+                    // example 2 call back function
+                    function resetColor(item) {
+                        $(item).find("input[type=text]").css("color", "");
+                    };
 
                     // display form submit data
                     $("form").submit(function(event) {

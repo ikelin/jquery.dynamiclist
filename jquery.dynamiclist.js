@@ -1,5 +1,5 @@
 /**
- * jQuery Dynamic List v 1.0.0
+ * jQuery Dynamic List v 2.0
  * Copyright 2012 Ike Lin
  * http://www.apache.org/licenses/LICENSE-2.0.txt
  */
@@ -21,7 +21,6 @@
         
         // setting plugin default settings and overriding options
         var settings = $.extend( {
-            templateClass: "list-template",
             itemClass: "list-item",
             addClass: "list-add",
             removeClass: "list-remove",
@@ -36,29 +35,26 @@
         // private methods
         // ------------------------------------------------
 
-        // Appends new item to the list by cloning the template item. The new
+        // Appends new item to the list by cloning the first item. The new
         // item is normalized and cleared of value before adding to the list.
         var handleAdd = function(list, event, settings) {
             var length = list.find("." + settings.itemClass).length;          
             if (length < settings.maxSize) {
                 // clone new item from first item
-                var item = list.find("." + settings.templateClass).clone(
+                var item = list.find("." + settings.itemClass + ":first").clone(
                     settings.withEvents);
-                item.show();
 
                 // register new item remove link
-                item.find("." + settings.removeClass).click(function(event) {
+                item.find("." + settings.removeClass).show().click(function(event) {
                     handleRemove(list, $(this), event, settings);
                 });
 
                 // clean up new item
-                normalizeItem(item, length, true);
+                normalizeItem(item, length);
                 clearItem(item);
 
                 // add new item
                 var last = list.find("." + settings.itemClass + ":last");
-                if (last.length == 0)
-                    last = list.find("." + settings.templateClass);
                 last.after(item);
 				
                 // call back before adding
@@ -92,34 +88,26 @@
 
         // Normalizes the list but changing all id, name and for attribute
         // inside the item to the current item number.
-        var normalizeItem = function(item, itemNum, isTemplate) {
+        var normalizeItem = function(item, itemNum) {
             item.find("label, input, select, textarea").each(function() {
                 var attributes = ["class", "name", "id", "for"]
                 for (var i = 0; i < attributes.length; i++) {
                     var attr = $(this).attr(attributes[i]);
                     if (attr) {
-                        if (isTemplate) {
-                            attr = attr.replace(/\#\./, itemNum + ".");
-                            attr = attr.replace(/\[\#\]\./, "[" + itemNum + "].");
-                        }
-                        else {
-                            attr = attr.replace(/\d+\./, itemNum + ".");
-                            attr = attr.replace(/\[\d+\]\./, "[" + itemNum + "].");
-                        }
-                        $(this).attr(attributes[i], attr);
+                        attr = attr.replace(/\d+\./, itemNum + ".");
+                        attr = attr.replace(/\[\d+\]\./, "[" + itemNum + "].");
                     }
+                    $(this).attr(attributes[i], attr);
                 }
             });
-            if (isTemplate) {
-                item.removeClass("list-template").addClass("list-item");
-            }
         }
 
         // Normalizes the entire list.
         var normalizeList = function(list, settings) {
             list.find("." + settings.itemClass).each(function() {
                 var index = list.find("." + settings.itemClass).index(this);
-                normalizeItem($(this), index, false);
+                console.log("index is " + index);
+                normalizeItem($(this), index);
             });
         }
 
@@ -132,8 +120,10 @@
         
         var init = function(list) {
            
+            // remove first item's remove link
+            list.find("." + settings.itemClass + ":first " + "." + settings.removeClass).hide()           
+           
             // initializes the list
-            list.find("." + settings.templateClass).hide();
             var length = list.find("." + settings.itemClass).length;
             while (settings.minSize > length) {
                 handleAdd(list, null, settings);
@@ -150,19 +140,7 @@
                 handleRemove(list, $(this), event, settings);
             });
             
-            // when parent form is submitted
-            list.parents("form:first").submit(function(){
-                list.find("." + settings.templateClass).remove();
-            })
-            
             return list;
-        }
-        
-        // ------------------------------------------------
-        // public methods
-        // ------------------------------------------------
-        this.removeListTemplate = function() {
-            $(this).find("." + settings.templateClass).remove();
         }
         
         return init(this);  
