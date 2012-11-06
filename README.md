@@ -1,4 +1,4 @@
-# jQuery Dynamic List v2.0 #
+# jQuery Dynamic List v2.0.1 #
 
 A jQuery plugin that dynamically adds or removes items from a list on the client side and normalizes the list index.
 
@@ -11,15 +11,15 @@ See demo page for more example such as events and call back functions.
 ## Usage ##
 
     <form>
-		<div id="list">
-        	<div class="list-item">
-        	    <input type="text" name="guests[0].name" />
-        	    <a href="#" class="list-remove">Remove</a>
-	        </div>
-        	<a href="#" class="list-add">Add</a>
-		</div>
-		<input type="submit" />
-	</form>
+	<div id="list">
+            <div class="list-item">
+                <input type="text" name="guests[0].name" />
+                <a href="#" class="list-remove">Remove</a>
+            </div>
+            <a href="#" class="list-add">Add</a>
+        </div>
+        <input type="submit" />
+    </form>
 
     <script>
         $(document).ready(function() {
@@ -30,17 +30,17 @@ See demo page for more example such as events and call back functions.
 When there are existing rows, example in Grails GSP:
 
     <form>
-		<div id="list">
-			<g:each in="${guestList}" var="guest" status="i">
-				<div class="list-item">
-        	    	<input type="text" name="guests[${i}].name" value="${guest.name}" />
-        	   		<a href="#" class="list-remove">Remove</a>
-	        	</div>
-			</g:each>
-        	<a href="#" class="list-add">Add</a>
-		</div>
-		<input type="submit" />
-	</form>
+        <div id="list">
+            <g:each in="${guestList}" var="guest" status="i">
+                <div class="list-item">
+                    <input type="text" name="guests[${i}].name" value="${guest.name}" />
+                    <a href="#" class="list-remove">Remove</a>
+                </div>
+            </g:each>
+        <a href="#" class="list-add">Add</a>
+        </div>
+        <input type="submit" />
+    </form>
 
     <script>
         $(document).ready(function() {

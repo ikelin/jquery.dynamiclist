@@ -1,5 +1,5 @@
 /**
- * jQuery Dynamic List v 2.0
+ * jQuery Dynamic List v 2.0.1
  * Copyright 2012 Ike Lin
  * http://www.apache.org/licenses/LICENSE-2.0.txt
  */
@@ -106,7 +106,6 @@
         var normalizeList = function(list, settings) {
             list.find("." + settings.itemClass).each(function() {
                 var index = list.find("." + settings.itemClass).index(this);
-                console.log("index is " + index);
                 normalizeItem($(this), index);
             });
         }
