@@ -1,4 +1,4 @@
-# jQuery Dynamic List v2.0.1 #
+# jQuery Dynamic List v2.0 #
 
 A jQuery plugin that dynamically adds or removes items from a list on the client side and normalizes the list index.
 
